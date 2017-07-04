@@ -14,9 +14,10 @@ the License.
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../docs-parameters-table/docs-json-parameters-table.html">
 <link rel="import" href="../docs-parameters-table/docs-xml-parameters-table.html">
-<link rel="import" href="../docs-parameters-table/docs-form-parameters-table.html">
+<link rel="import" href="../docs-parameters-table/docs-json-structure-view.html">
+<link rel="import" href="../docs-parameters-table/raml-type-property-description.html">
+<link rel="import" href="../docs-parameters-table/docs-parameters-table-shared-styles.html">
 <link rel="import" href="../iron-media-query/iron-media-query.html">
-
 <!--
 `<raml-docs-types-viewer>` A documentation viewer for RAML types
 
@@ -39,8 +40,9 @@ Custom property | Description | Default
 <dom-module id="raml-docs-types-viewer">
   <template>
     <style include="markdown-styles"></style>
+    <style include="docs-parameters-table-shared-styles"></style>
     <style>
-    :host {
+     :host {
       display: block;
     }
 
@@ -57,7 +59,7 @@ Custom property | Description | Default
 
     .type-desc {
       margin-bottom: 28px;
-      color: rgba(0,0,0,0.74);
+      color: rgba(0, 0, 0, 0.74);
       @apply(--arc-font-body1);
       @apply(--raml-docs-types-viewer-content-section);
       @apply(--raml-docs-item-description);
@@ -67,14 +69,27 @@ Custom property | Description | Default
       <span class="label">Type</span>
       <span class="value">[[_computeTypeName(type)]]</span>
     </h2>
-
-    <div hidden$="[[_computeTypeMethodDesc(type.description)]]" class="type-desc">
-      <marked-element markdown="[[type.description]]">
-        <div class="markdown-html markdown-body"></div>
-      </marked-element>
-    </div>
-
-    <docs-json-parameters-table type="[[_computeType(type)]]" structure-display-opened narrow="[[narrow]]"></docs-json-parameters-table>
+    <template is="dom-if" if="[[!isPrimitive]]" restamp>
+      <template is="dom-if" if="[[_computeHasValue(type.description)]]" restamp>
+        <div class="type-desc">
+          <marked-element markdown="[[type.description]]">
+            <div class="markdown-html markdown-body"></div>
+          </marked-element>
+        </div>
+      </template>
+    </template>
+    <template is="dom-if" if="[[isObject]]" restamp>
+      <docs-json-parameters-table type="[[_computeTypeProperties(type)]]" structure-display-opened narrow="[[narrow]]"></docs-json-parameters-table>
+    </template>
+    <template is="dom-if" if="[[isJson]]" restamp>
+      <docs-json-structure-view type="[[type]]" structure-display-opened has-type narrow="[[narrow]]"></docs-json-structure-view>
+    </template>
+    <template is="dom-if" if="[[isXml]]" restamp>
+      <docs-xml-parameters-table type="[[type]]" structure-display-opened narrow="[[narrow]]"></docs-xml-parameters-table>
+    </template>
+    <template is="dom-if" if="[[isPrimitive]]" restamp>
+      <raml-type-property-description item="[[type]]" display-type></raml-type-property-description>
+    </template>
     <iron-media-query query="max-width: 640px" query-matches="{{narrow}}"></iron-media-query>
   </template>
   <script>
@@ -86,7 +101,66 @@ Custom property | Description | Default
       /**
        * Set to true when whould display narrow layout.
        */
-      narrow: Boolean
+      narrow: Boolean,
+      // Computed value, true if current type is a RAML type definition
+      isObject: {
+        type: Object,
+        value: false,
+        readOnly: true
+      },
+      // Computed value, true if current type is a JSON schema
+      isJson: {
+        type: Object,
+        value: false,
+        readOnly: true
+      },
+      // Computed value, true if current type is an XML type object
+      isXml: {
+        type: Object,
+        value: false,
+        readOnly: true
+      },
+      // Computed value, true if current type is a primitive
+      isPrimitive: {
+        type: Object,
+        value: false,
+        readOnly: true
+      }
+    },
+
+    observers: ['_computeType(type)'],
+    /**
+     * Resets read only properties states.
+     */
+    reset: function() {
+      this._setIsObject(false);
+      this._setIsJson(false);
+      this._setIsXml(false);
+      this._setIsPrimitive(false);
+    },
+    /**
+     * Computes type of passed in `type` property object.
+     */
+    _computeType: function(obj) {
+      this.reset();
+      if (!obj) {
+        return;
+      }
+      var type = obj.type;
+      switch (type) {
+        case 'object':
+        case 'array':
+          this._setIsObject(true);
+          break;
+        case 'xml':
+          this._setIsXml(true);
+          break;
+        case 'json':
+          this._setIsJson(true);
+          break;
+        default:
+          this._setIsPrimitive(true);
+      }
     },
 
     _computeTypeName: function(type) {
@@ -95,8 +169,13 @@ Custom property | Description | Default
       }
       return type.displayName || type.name || type.key || undefined;
     },
-
-    _computeType: function(type) {
+    /**
+     * Computes type's properties to match required data model.
+     *
+     * @param {Object} type RAML's type definition.
+     * @return {Object} The same object with properties as array.
+     */
+    _computeTypeProperties: function(type) {
       if (!type) {
         return;
       }
@@ -114,9 +193,24 @@ Custom property | Description | Default
       }
       return type;
     },
-
-    _computeTypeMethodDesc: function(description) {
-      return !description;
+    /**
+     * Check if passed object is set.
+     * 0 (zero) returns true while empty string returns false.
+     *
+     * @return {Boolean} True/False depending if passed object has a value.
+     */
+    _computeHasValue: function(obj) {
+      var type = typeof obj;
+      if (type === 'number' && obj === 0) {
+        return true;
+      }
+      if (type === 'boolean') {
+        return true;
+      }
+      if (type === 'string' && obj === '') {
+        return true;
+      }
+      return !!obj;
     },
   });
   </script>
