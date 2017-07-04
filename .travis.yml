@@ -4,18 +4,19 @@ node_js: stable
 before_script:
 - npm install --silent bower polymer-cli
 - ./node_modules/.bin/bower install --silent
-# addons:
-#   sauce_connect: true
+addons:
+  sauce_connect: true
 script:
 - npm run lint
-# - ./node_modules/.bin/polymer test --plugin sauce --job-name "raml-docs-types-viewer:${TRAVIS_BRANCH}" --build-number=${TRAVIS_BUILD_NUMBER}
-cache:
-  directories:
-  - bower_components
-  - node_modules
+- ./node_modules/.bin/polymer test --plugin sauce --job-name "raml-docs-types-viewer:${TRAVIS_BRANCH}"
+  --build-number=${TRAVIS_BUILD_NUMBER}
 branches:
   only:
-    - stage
-    - develop
+  - stage
+  - develop
 after_success:
-  - node tasks/ci.js
+- node tasks/ci.js
+env:
+  global:
+  - secure: CKq6hIVnAT9PGSUPWPa97FZQOxKXjGK0/XksT438CUB1Hiby4b7Q2KdPwOXrplBqxI3GF+B97cGq7v4vWHolOnJXG6oWT09TtRadLhuSKcyQYgga0CF8nDoyhxl13lzOz85ncEkH5JWWtxEq9/pTVg6OL1xtQ4gqcYtcgLvNJquU8AVKVzfe1gdxRYsczqgaQGW5SToIiI1c976RcXqefqK6ii+93SHPR70jvmUBBovOXw8I7NrVtIegDjhcpjuP5wlauExUDJDwoMEyw48NNb2gz9rc+sgX+QH6dQuVVgz4hubQUv3gSvBLeREcwBSOqX0SqSYPSEgdsuyhx/+5RoIFJrR9bojeFweWzH16EkuQ+dVP/J5jpcP5+I42YOBOfTBVl1kI31Esx2LrY2MrIB+jFiXL9s8ru+H3CRNM5o03/6+2o95KhK7x+xiu2xIAKtLe6dKN9yk0V7IqwCAV0QtrL3fysKLcMTj5BLg+i8VZtynBUO0HGoNp/XgctIKgtNwDnHFtb8yGaDNObEyNZebrzlYvHVOfI5L1DYqEpYFCDXmRrR8GndQMHSNRYFJv+81xep6602cdo+PbQQtSyO20JLW839/QbzjB30dKwteZa5nnmdvVMCZIVC4nMGjXBsJqZu/vwLgGG7lVu8t862amkVswNK442wYrEy7SMPw=
+  - secure: D83oFqL7dpo5AYK0UHozDRv6tdf7eey0K6dOf69txwqp34ph7cZNFn1HQAtaABaQC8htyS11oRtFragN3OCC02+eR87z2Pc05Toc2aJMStbLZ2vRPglNyzv1i4GOcFqg5qMU1eBaHFbAMHEGmDSPlXgWNo3EzzQhDlLfbE8p66rJ53H/UXuSuAkjPfpEOzJoqDC6KCdCC6rOlPCkwk7mfgw8WGCtSA7dLYQ7FcRu1wwWyPV9umhqDeTBgBKUZty1/X5PYqPUsaop8VWWowyloNx2xdses+ZmfvSIpif0MtVkQmzkiyRhYKT1Bth8ZtU6hmDJ7EgO2wqWQtFIg4VZsPaeQtcv48FYzhggjpBlRdXfjDO5Imm9EbA+M8f3MVOQ6TGqPu4/1XRrN5Sr2ddcRu+HpXE/mXlyzB9T92K+GVs0fnDBh8zk41f4K/Lg0OaUTdZYh+h7VLY//DNjXlwAXwIPBpp2KivzeHVAOZ1PzvBRl8t6Pr5Uca7aMy+8tMpm/ljaKJIasmnFDaSIIHIhYOE+bEzlfd92GSnHkK5p26stwD3u81k/tPGkQkIRsvFaYP0YHEFBO18UeSDCgH/ILSsu055O7JfLu9n63akbrO3lGbL8Ai5crrz9vQIQZkmyWXMG6/dx2lBaakWYE1cv8DMouzCXDOI+lRRhpq9y2BY=
