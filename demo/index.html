@@ -38,8 +38,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </style>
 </head>
 <body unresolved>
-  <template is="dom-bind">
-    <raml-demo-page selected-object="{{selected}}" is-type="{{isType}}">
+  <template is="dom-bind" id="app">
+    <raml-demo-page selected-object="{{selected}}" is-type="{{isType}}" url="[[testRaml]]">
+      <paper-item data-url$="[[testRaml]]">Test RAML</paper-item>
       <h1>raml-docs-types-viewer</h1>
       <div main>
         <template is="dom-if" if="[[isType]]" restamp="true">
@@ -49,5 +50,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
     </raml-demo-page>
   </template>
+  <script>
+   (function(scope) {
+     var path = location.pathname;
+     if (~path.indexOf('.html')) {
+       path = path.substr(0, path.lastIndexOf('/') + 1);
+     }
+     scope.testRaml = location.protocol + '//' + location.host +
+       path.replace('demo', 'test') + 'test.raml';
+   })(document.getElementById('app'));
+   </script>
 </body>
 </html>
