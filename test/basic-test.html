@@ -18,7 +18,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script src="../../iron-test-helpers/test-helpers.js"></script>
     <script src="../../iron-test-helpers/mock-interactions.js"></script>
 
-    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../../raml-js-parser/raml-js-parser.html">
+    <link rel="import" href="../../raml-json-enhance/raml-json-enhance.html">
     <link rel="import" href="../raml-docs-types-viewer.html">
   </head>
   <body>
@@ -29,15 +30,150 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </template>
     </test-fixture>
 
+    <test-fixture id="parser">
+      <template>
+        <raml-js-parser json></raml-js-parser>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="enhancer">
+      <template>
+        <raml-json-enhance></raml-json-enhance>
+      </template>
+    </test-fixture>
+
     <script>
-    /* global suite, test, fixture, assert */
-    suite('basic', function() {
+    /* global fixture, assert */
+    suite('neutral state', function() {
       var element;
       setup(function() {
         element = fixture('basic');
       });
-      test('`raml-docs-types-viewer` should be initialized', function() {
-        assert.equal(element.isAttached, true, 'element.isAttached equals true');
+
+      test('isObject is false', function() {
+        assert.isFalse(element.isObject);
+      });
+
+      test('isJson is false', function() {
+        assert.isFalse(element.isJson);
+      });
+
+      test('isXml is false', function() {
+        assert.isFalse(element.isXml);
+      });
+
+      test('isPrimitive is false', function() {
+        assert.isFalse(element.isPrimitive);
+      });
+    });
+
+    suite('types set up', function() {
+      var raml;
+      var element;
+      suiteSetup(function(done) {
+        this.timeout(120000);
+
+        var baseUrl = location.href.substr(0, location.href.lastIndexOf('/') + 1);
+        var parser = fixture('parser');
+        var enhancer = fixture('enhancer');
+        enhancer.addEventListener('raml-json-enhance-ready', function(e) {
+          raml = e.detail.json;
+          done();
+        });
+        parser.loadApi(baseUrl + 'test.raml')
+        .then(function(data) {
+          enhancer.json = data.json.specification;
+        })
+        .catch(function(e) {
+          done(new Error('Parser error: ' + (e.message || 'Some error happened...')));
+        });
+      });
+
+      setup(function() {
+        element = fixture('basic');
+      });
+
+      test('isPrimitive is true for enum type', function() {
+        element.type = raml.types.enumType;
+        assert.isTrue(element.isPrimitive, 'isPrimitive is true');
+        assert.isFalse(element.isObject, 'isObject is false');
+        assert.isFalse(element.isJson, 'isJson is false');
+        assert.isFalse(element.isXml, 'isXml is false');
+      });
+
+      test('isPrimitive is true for primitive type', function() {
+        element.type = raml.types.primitiveType;
+        assert.isTrue(element.isPrimitive, 'isPrimitive is true');
+        assert.isFalse(element.isObject, 'isObject is false');
+        assert.isFalse(element.isJson, 'isJson is false');
+        assert.isFalse(element.isXml, 'isXml is false');
+      });
+
+      test('isJson is true for JSON schemas', function() {
+        element.type = raml.types.Entry;
+        assert.isTrue(element.isJson, 'isJson is true');
+        assert.isFalse(element.isPrimitive, 'isPrimitive is false');
+        assert.isFalse(element.isObject, 'isObject is false');
+        assert.isFalse(element.isXml, 'isXml is false');
+      });
+
+      test('isObject is true for RAML types', function() {
+        element.type = raml.types.Person;
+        assert.isTrue(element.isObject, 'isObject is true');
+        assert.isFalse(element.isJson, 'isJson is false');
+        assert.isFalse(element.isPrimitive, 'isPrimitive is false');
+        assert.isFalse(element.isXml, 'isXml is false');
+      });
+
+      test('isPrimitive is false', function() {
+        element.type = raml.types.typeXml;
+        assert.isTrue(element.isXml, 'isXml is true');
+        assert.isFalse(element.isObject, 'isObject is false');
+        assert.isFalse(element.isJson, 'isJson is false');
+        assert.isFalse(element.isPrimitive, 'isPrimitive is false');
+      });
+    });
+
+    suite('_computeTypeName()', function() {
+      var element;
+
+      setup(function() {
+        element = fixture('basic');
+      });
+
+      test('Should return item\'s display name property', function() {
+        var obj = {
+          displayName: 'test-dn',
+          name: 'test-n',
+          key: 'test-k'
+        };
+        var name = element._computeTypeName(obj);
+        assert.equal(name, 'test-dn');
+      });
+
+      test('Should return item\'s name property', function() {
+        var obj = {
+          name: 'test-n',
+          key: 'test-k'
+        };
+        var name = element._computeTypeName(obj);
+        assert.equal(name, 'test-n');
+      });
+
+      test('Should return item\'s key property', function() {
+        var obj = {
+          key: 'test-k'
+        };
+        var name = element._computeTypeName(obj);
+        assert.equal(name, 'test-k');
+      });
+
+      test('Should return undefined', function() {
+        var obj = {
+          any: 'test'
+        };
+        var name = element._computeTypeName(obj);
+        assert.isUndefined(name);
       });
     });
     </script>
