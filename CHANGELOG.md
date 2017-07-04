@@ -1,3 +1,13 @@
+<a name="0.1.1"></a>
+## [0.1.1](https://github.com/advanced-rest-client/raml-docs-types-viewer/compare/0.0.6...v0.1.1) (2017-07-04)
+
+
+### Update
+
+* Updated travis configuration to add Sauce Labs connect and actually perform the tests. ([c2d5d9dabae3ad4876c5f8ad7d57f9010c6cb592](https://github.com/advanced-rest-client/raml-docs-types-viewer/commit/c2d5d9dabae3ad4876c5f8ad7d57f9010c6cb592))
+
+
+
 <a name="0.0.6"></a>
 ## [0.0.6](https://github.com/advanced-rest-client/raml-docs-types-viewer/compare/0.0.5...v0.0.6) (2017-07-04)
 
