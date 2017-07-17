@@ -1,3 +1,13 @@
+<a name="0.1.3"></a>
+## [0.1.3](https://github.com/advanced-rest-client/raml-docs-types-viewer/compare/0.1.2...v0.1.3) (2017-07-17)
+
+
+### Update
+
+* Added behavior with common functions. ([d0325e8319ecab8122b55e0c35c46de5940b6b37](https://github.com/advanced-rest-client/raml-docs-types-viewer/commit/d0325e8319ecab8122b55e0c35c46de5940b6b37))
+
+
+
 <a name="0.1.2"></a>
 ## [0.1.2](https://github.com/advanced-rest-client/raml-docs-types-viewer/compare/0.1.1...v0.1.2) (2017-07-04)
 
