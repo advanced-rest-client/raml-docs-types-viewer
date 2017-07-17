@@ -133,49 +133,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         assert.isFalse(element.isPrimitive, 'isPrimitive is false');
       });
     });
-
-    suite('_computeTypeName()', function() {
-      var element;
-
-      setup(function() {
-        element = fixture('basic');
-      });
-
-      test('Should return item\'s display name property', function() {
-        var obj = {
-          displayName: 'test-dn',
-          name: 'test-n',
-          key: 'test-k'
-        };
-        var name = element._computeTypeName(obj);
-        assert.equal(name, 'test-dn');
-      });
-
-      test('Should return item\'s name property', function() {
-        var obj = {
-          name: 'test-n',
-          key: 'test-k'
-        };
-        var name = element._computeTypeName(obj);
-        assert.equal(name, 'test-n');
-      });
-
-      test('Should return item\'s key property', function() {
-        var obj = {
-          key: 'test-k'
-        };
-        var name = element._computeTypeName(obj);
-        assert.equal(name, 'test-k');
-      });
-
-      test('Should return undefined', function() {
-        var obj = {
-          any: 'test'
-        };
-        var name = element._computeTypeName(obj);
-        assert.isUndefined(name);
-      });
-    });
     </script>
 
   </body>

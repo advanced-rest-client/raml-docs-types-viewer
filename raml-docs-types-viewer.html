@@ -17,6 +17,7 @@ the License.
 <link rel="import" href="../docs-parameters-table/docs-json-structure-view.html">
 <link rel="import" href="../docs-parameters-table/raml-type-property-description.html">
 <link rel="import" href="../docs-parameters-table/docs-parameters-table-shared-styles.html">
+<link rel="import" href="../raml-behaviors/raml-behavior.html">
 <link rel="import" href="../iron-media-query/iron-media-query.html">
 <!--
 `<raml-docs-types-viewer>` A documentation viewer for RAML types
@@ -67,10 +68,10 @@ Custom property | Description | Default
     </style>
     <h2>
       <span class="label">Type</span>
-      <span class="value">[[_computeTypeName(type)]]</span>
+      <span class="value">[[typeName(type)]]</span>
     </h2>
     <template is="dom-if" if="[[!isPrimitive]]" restamp>
-      <template is="dom-if" if="[[_computeHasValue(type.description)]]" restamp>
+      <template is="dom-if" if="[[hasValue(type.description)]]" restamp>
         <div class="type-desc">
           <marked-element markdown="[[type.description]]">
             <div class="markdown-html markdown-body"></div>
@@ -79,7 +80,7 @@ Custom property | Description | Default
       </template>
     </template>
     <template is="dom-if" if="[[isObject]]" restamp>
-      <docs-json-parameters-table type="[[_computeTypeProperties(type)]]" structure-display-opened narrow="[[narrow]]"></docs-json-parameters-table>
+      <docs-json-parameters-table type="[[typeProperties(type)]]" structure-display-opened narrow="[[narrow]]"></docs-json-parameters-table>
     </template>
     <template is="dom-if" if="[[isJson]]" restamp>
       <docs-json-structure-view type="[[type]]" structure-display-opened has-type narrow="[[narrow]]"></docs-json-structure-view>
@@ -95,6 +96,9 @@ Custom property | Description | Default
   <script>
   Polymer({
     is: 'raml-docs-types-viewer',
+
+    behaviors: [Polymer.RamlBehavior],
+
     properties: {
       // A type declaration to display.
       type: Object,
@@ -161,57 +165,7 @@ Custom property | Description | Default
         default:
           this._setIsPrimitive(true);
       }
-    },
-
-    _computeTypeName: function(type) {
-      if (!type) {
-        return;
-      }
-      return type.displayName || type.name || type.key || undefined;
-    },
-    /**
-     * Computes type's properties to match required data model.
-     *
-     * @param {Object} type RAML's type definition.
-     * @return {Object} The same object with properties as array.
-     */
-    _computeTypeProperties: function(type) {
-      if (!type) {
-        return;
-      }
-      if (type.properties) {
-        if (!(type.properties instanceof Array)) {
-          var names = Object.getOwnPropertyNames(type.properties);
-          var properties = [];
-          names.forEach(function(name) {
-            var item = type.properties[name];
-            item.key = name;
-            properties.push(item);
-          });
-          type.properties = properties;
-        }
-      }
-      return type;
-    },
-    /**
-     * Check if passed object is set.
-     * 0 (zero) returns true while empty string returns false.
-     *
-     * @return {Boolean} True/False depending if passed object has a value.
-     */
-    _computeHasValue: function(obj) {
-      var type = typeof obj;
-      if (type === 'number' && obj === 0) {
-        return true;
-      }
-      if (type === 'boolean') {
-        return true;
-      }
-      if (type === 'string' && obj === '') {
-        return true;
-      }
-      return !!obj;
-    },
+    }
   });
   </script>
 </dom-module>
