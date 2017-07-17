@@ -1,7 +1,7 @@
 {
   "name": "raml-docs-types-viewer",
   "description": "A documentation viewer for RAML types",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "license": "Apache-2.0 OR CC-BY-4.0",
   "authors": [
     "The Advanced REST client authors <arc@mulesoft.com>"
@@ -23,7 +23,8 @@
     "docs-parameters-table": "advanced-rest-client/docs-parameters-table#^1.1.11",
     "marked-element": "PolymerElements/marked-element#^1.2.0",
     "markdown-styles": "advanced-rest-client/markdown-styles#^1.0.0",
-    "iron-media-query": "PolymerElements/iron-media-query#^1.0.8"
+    "iron-media-query": "PolymerElements/iron-media-query#^1.0.8",
+    "raml-behaviors": "advanced-rest-client/raml-behaviors#^1.0.4"
   },
   "devDependencies": {
     "iron-component-page": "polymerelements/iron-component-page#1.0.0",
