@@ -1,3 +1,18 @@
+<a name="0.1.5"></a>
+## [0.1.5](https://github.com/advanced-rest-client/raml-docs-types-viewer/compare/0.1.3...0.1.5) (2017-12-27)
+
+
+### Fix
+
+* Added support for some wired parser output for a type. ([00d5769b55d4ecd3b088a776a9a67483d9fe3ed1](https://github.com/advanced-rest-client/raml-docs-types-viewer/commit/00d5769b55d4ecd3b088a776a9a67483d9fe3ed1))
+
+### Update
+
+* Added union type to match new datatype expansion model ([223ae61b826f2db2d3a4ba129d9bc337d05fcd5f](https://github.com/advanced-rest-client/raml-docs-types-viewer/commit/223ae61b826f2db2d3a4ba129d9bc337d05fcd5f))
+* Removed unused dependencies. ([ea5eeb5a3924877100e39de0286580704d64053c](https://github.com/advanced-rest-client/raml-docs-types-viewer/commit/ea5eeb5a3924877100e39de0286580704d64053c))
+
+
+
 <a name="0.1.4"></a>
 ## [0.1.4](https://github.com/advanced-rest-client/raml-docs-types-viewer/compare/0.1.3...v0.1.4) (2017-07-17)
 
