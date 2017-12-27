@@ -163,8 +163,40 @@ Custom property | Description | Default
         case 'json':
           this._setIsJson(true);
           break;
-        default:
+        case 'nil':
+        case 'number':
+        case 'integer':
+        case 'string':
+        case 'boolean':
+        case 'date-only':
+        case 'time-only':
+        case 'datetime-only':
+        case 'datetime':
+        case 'file':
           this._setIsPrimitive(true);
+          break;
+        default:
+          type = this._detectType(obj.type);
+          if (type === 'xml') {
+            this._setIsXml(true);
+          } else if (type === 'json') {
+            this._setIsJson(true);
+          } else {
+            this._setIsPrimitive(true);
+          }
+      }
+    },
+
+    _detectType: function(type) {
+      if (!type || typeof type !== 'string') {
+        return;
+      }
+      type = type.trim();
+      if (type[0] === '<') {
+        return 'xml';
+      }
+      if (type[0] === '{' || type[0] === '[') {
+        return 'json';
       }
     }
   });
